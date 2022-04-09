@@ -1,0 +1,5 @@
+{
+    "require": {
+        "postal/postal": "^1.0"
+    }
+}
