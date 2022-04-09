@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Mailster Postal Server
- * Plugin URI: https://gurmehub.com/
+ * Plugin URI: https://gurmehub.com/product/mailster-postal-server-integration/
  * Description: Uses Postal server to deliver emails for the Mailster Newsletter Plugin for WordPress.
  * Version: 1.1
  * Author: Gurmesoft
