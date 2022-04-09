@@ -3,7 +3,6 @@
  * This page contains Mailster hooks class.
  */
 
-
 /**
  * This class contains Mailster hooks
  */

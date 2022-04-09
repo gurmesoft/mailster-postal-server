@@ -28,7 +28,7 @@ class MPS_WordPress_Hooks {
 			add_action( 'admin_notices', array( $this, 'admin_notice' ) );
 		} else {
 			require_once MPS_PLUGIN_DIR_PATH . 'includes/class-mps-mailster-hooks.php';
-			new MPS_Mailster_Hooks;
+			new MPS_Mailster_Hooks();
 		}
 	}
 

@@ -9,6 +9,7 @@
  * Text Domain: mailster-postal
  * Requires at least: 5.7
  * Requires PHP: 7.4
+ * Tested up to: 5.9
  */
 
 defined( 'ABSPATH' ) || exit;

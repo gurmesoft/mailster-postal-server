@@ -13,7 +13,7 @@ class MPS_Loader {
 		require_once MPS_PLUGIN_DIR_PATH . 'includes/class-mps-wordpress-hooks.php';
 
 		return array(
-			new MPS_Wordpress_Hooks,
+			new MPS_Wordpress_Hooks(),
 		);
 	}
 
