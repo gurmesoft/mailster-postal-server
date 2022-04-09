@@ -4,17 +4,18 @@
  */
 
 
- /**
-  * This class contains Mailster hooks
-  */
+/**
+ * This class contains Mailster hooks
+ */
 class MPS_Mailster_Hooks {
 
 	public function __construct() {
 		add_filter( 'mailster_delivery_methods', array( $this, 'add_new_method' ) );
 		add_action( 'mailster_deliverymethod_tab_postal', array( $this, 'method_tab' ) );
 
-		if ( mailster_option( 'deliverymethod' ) == 'postal' ) {
+		if ( mailster_option( 'deliverymethod' ) === 'postal' ) {
 			require_once MPS_PLUGIN_DIR_PATH . 'vendor/autoload.php';
+			add_action( 'mailster_section_tab_bounce', array( $this, 'section_tab_bounce' ) );
 			add_action( 'mailster_initsend', array( &$this, 'init_send' ) );
 			add_action( 'mailster_presend', array( &$this, 'pre_send' ) );
 			add_action( 'mailster_dosend', array( &$this, 'do_send' ) );
@@ -22,6 +23,7 @@ class MPS_Mailster_Hooks {
 	}
 
 	/**
+	 * mailster_delivery_methods hook callback function
 	 * Add Postal to delivery methods
 	 *
 	 * @param  array $delivery_methods
@@ -33,6 +35,7 @@ class MPS_Mailster_Hooks {
 	}
 
 	/**
+	 * mailster_deliverymethod_tab_postal hook callback function
 	 * Postal method settings tab
 	 *
 	 * @return void
@@ -41,10 +44,41 @@ class MPS_Mailster_Hooks {
 		include MPS_PLUGIN_DIR_PATH . '/views/tab.php';
 	}
 
+	/**
+	 * mailster_section_tab_bounce hook callback function
+	 * Displays a note on the bounce tab
+	 *
+	 * @return void
+	 */
+	public function section_tab_bounce() {
+
+		?>
+			<div class="error inline">
+				<p><strong><?php esc_html_e( 'Bouncing is handled by postal so all your settings will be ignored', 'mailster-postal' ); ?></strong></p>
+			</div>
+		<?php
+	}
+
+
+	/**
+	 * mailster_initsend hook callback function
+	 * Set initial settings
+	 *
+	 * @param  MailsterMail $mail_object
+	 * @return void
+	 */
 	public function init_send( $mail_object ) {
 		$mail_object->dkim = false;
 	}
 
+
+	/**
+	 * mailster_presend hook callback function
+	 * Apply settings before each mail
+	 *
+	 * @param  MailsterMail $mail_object
+	 * @return void
+	 */
 	public function pre_send( $mail_object ) {
 
 		$mail_object->pre_send();
@@ -75,11 +109,11 @@ class MPS_Mailster_Hooks {
 			'Name'  => $mail_object->from_name,
 		);
 
-		$message_obj['To']          = $recipients;
-		$message_obj['Subject']     = $mail_object->subject;
-		$message_obj['TextPart']    = $mail_object->mailer->AltBody;
-		$message_obj['HTMLPart']    = $mail_object->mailer->Body;
-		$message_obj['Headers']     = array( 'Reply-To' => $mail_object->reply_to );
+		$message_obj['To']       = $recipients;
+		$message_obj['Subject']  = $mail_object->subject;
+		$message_obj['TextPart'] = $mail_object->mailer->AltBody;
+		$message_obj['HTMLPart'] = $mail_object->mailer->Body;
+		$message_obj['Headers']  = array( 'Reply-To' => $mail_object->reply_to );
 
 		if ( $mail_object->headers ) {
 			foreach ( $mail_object->headers as $key => $value ) {
@@ -101,7 +135,7 @@ class MPS_Mailster_Hooks {
 					'Base64Content' => base64_encode( file_get_contents( $attachment[0] ) ),
 				);
 
-				if ( 'inline' == $attachment[6] ) {
+				if ( 'inline' === $attachment[6] ) {
 					$message_obj['HTMLPart']             = str_replace( '"cid:' . $attachment[7] . '"', '"cid:' . $attachment[1] . '"', $message_obj['HTMLPart'] );
 					$message_obj['InlinedAttachments'][] = $a;
 				} else {
@@ -111,58 +145,57 @@ class MPS_Mailster_Hooks {
 		}
 	}
 
+	/**
+	 * mailster_dosend hook callback function
+	 * Triggers the send
+	 *
+	 * @param  MailsterMail $mail_object
+	 * @return void
+	 */
 	public function do_send( $mail_object ) {
 
-		ini_set( 'display_errors', 1 );
-		ini_set( 'display_startup_errors', 1 );
-		error_reporting( E_ALL );
+		try {
 
-		try{
-				
-		
-		$domain     = mailster_option( 'postal_domain' );
-		$api        = mailster_option( 'postal_api_key' );
+			$domain = mailster_option( 'postal_domain' );
+			$api    = mailster_option( 'postal_api_key' );
 
-		if ( ! $domain || ! $api ) {
-			$mail_object->set_error( __( 'Postal settings are empty please check your api and domain', 'mailster-postal' ) );
-			$mail_object->sent = false;
-		} else {
-			$client     = new \Postal\Client( $domain, $api );
-			$message    = new \Postal\SendMessage( $client );
+			if ( ! $domain || ! $api ) {
+				$mail_object->set_error( __( 'Postal settings are empty please check your api and domain', 'mailster-postal' ) );
+				$mail_object->sent = false;
+			} else {
+				$client  = new \Postal\Client( $domain, $api );
+				$message = new \Postal\SendMessage( $client );
 
-			// $message->from( $mail_object->from );
-			$message->from( "dede@mail.com" );
-			$message->subject( $mail_object->subject );
-			$message->htmlBody( $mail_object->content );
-			$message->plainBody( $mail_object->plaintext );
+				$message->from( $mail_object->from );
+				$message->subject( $mail_object->subject );
+				$message->htmlBody( $mail_object->content );
+				$message->plainBody( $mail_object->plaintext );
 
-			foreach ( $mail_object->to as $address ) {
-				$message->to( $address );
-			}
-
-			if ( is_array( $mail_object->cc ) && ! empty( $mail_object->cc ) ) {
-				foreach ( $mail_object->cc as $address ) {
-					$message->cc( $address );
+				foreach ( $mail_object->to as $address ) {
+					$message->to( $address );
 				}
-			}
 
-			if ( is_array( $mail_object->bcc ) && ! empty( $mail_object->bcc ) ) {
-				foreach ( $mail_object->bcc as $address ) {
-					$message->bcc( $address );
+				if ( is_array( $mail_object->cc ) && ! empty( $mail_object->cc ) ) {
+					foreach ( $mail_object->cc as $address ) {
+						$message->cc( $address );
+					}
 				}
+
+				if ( is_array( $mail_object->bcc ) && ! empty( $mail_object->bcc ) ) {
+					foreach ( $mail_object->bcc as $address ) {
+						$message->bcc( $address );
+					}
+				}
+
+				$message->send();
+
+				$mail_object->sent = true;
 			}
-
-			$result = $message->send();
-
-			var_dump( $result );
-			die;
+		} catch ( Exception $e ) {
+			if ( $e ) {
+				$mail_object->set_error( $e->getMessage() );
+				$mail_object->sent = false;
+			}
 		}
-	}
-		// try {
-		// } catch ( Exception $e ) {
-		// 	$mail_object->set_error( $e->getMessage() );
-		// 	$mail_object->sent = false;
-		// }
-
 	}
 }
