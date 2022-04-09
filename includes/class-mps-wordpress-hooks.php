@@ -41,7 +41,7 @@ class MPS_WordPress_Hooks {
 		?>
 		<div id="message" class="error">
 			<p>
-				<strong>Postal integration for Mailster</strong> requires the <a href="https://mailster.co/?utm_campaign=wporg&utm_source=Mailjet+integration+for+Mailster&utm_medium=plugin">Mailster Newsletter Plugin</a>.
+				<strong>Postal integration for Mailster</strong> requires the <a href="https://mailster.co/?utm_campaign=wporg&utm_source=postal+integration+for+mailster&utm_medium=plugin">Mailster Newsletter Plugin</a>.
 			</p>
 		</div>
 		<?php

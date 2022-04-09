@@ -6,7 +6,7 @@ Stable tag: 1.1
 License: GPLv2
 ## Description
 
-> This Plugin requires [Mailster Newsletter Plugin for WordPress](https://mailster.co/?utm_campaign=wporg&utm_source=Mailjet+integration+for+Mailster&utm_medium=readme)
+This Plugin requires [Mailster Newsletter Plugin for WordPress](https://mailster.co/?utm_campaign=wporg&utm_source=postal+integration+for+mailster&utm_medium=readme)
 
 ## Installation
 
