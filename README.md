@@ -3,6 +3,7 @@ PostalServer.io Integration for Mailster
 Requires at least: 5.7  
 Tested up to: 5.9  
 Stable tag: 1.1
+License: GPLv2
 ## Description
 
 > This Plugin requires [Mailster Newsletter Plugin for WordPress](https://mailster.co/?utm_campaign=wporg&utm_source=Mailjet+integration+for+Mailster&utm_medium=readme)

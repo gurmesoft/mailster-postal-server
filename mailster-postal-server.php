@@ -10,6 +10,7 @@
  * Requires at least: 5.7
  * Requires PHP: 7.4
  * Tested up to: 5.9
+ * License: GPLv2
  */
 
 defined( 'ABSPATH' ) || exit;
