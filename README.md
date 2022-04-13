@@ -12,7 +12,7 @@ This Plugin requires [Mailster Newsletter Plugin for WordPress](https://mailster
 
 ## Installation
 
-1. Upload the entire `mailster-postal-server` folder to the `/wp-content/plugins/` directory
+1. Upload the entire `postal-server-integration-for-mailster` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to Settings => Newsletter => Delivery and select the `Postal` tab
 4. Enter your domain and api key save the settings
