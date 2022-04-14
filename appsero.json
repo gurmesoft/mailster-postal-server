@@ -1,0 +1,10 @@
+{
+    "exclude": [
+        ".github",
+        ".git",
+        "appsero.json",
+        "composer.json",
+        "composer.lock",
+        ".gitignore"
+    ]
+}
