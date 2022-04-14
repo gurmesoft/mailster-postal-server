@@ -13,7 +13,6 @@ class MPS_Mailster_Hooks {
 		add_action( 'mailster_deliverymethod_tab_postal', array( $this, 'method_tab' ) );
 
 		if ( mailster_option( 'deliverymethod' ) === 'postal' ) {
-			require_once MPS_PLUGIN_DIR_PATH . 'vendor/autoload.php';
 			add_action( 'mailster_section_tab_bounce', array( $this, 'section_tab_bounce' ) );
 			add_action( 'mailster_initsend', array( &$this, 'init_send' ) );
 			add_action( 'mailster_presend', array( &$this, 'pre_send' ) );

@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Postal\\' => array($vendorDir . '/postal/postal/src'),
+    'Appsero\\' => array($vendorDir . '/appsero/client/src'),
 );
