@@ -161,6 +161,8 @@ class MPS_Mailster_Hooks {
 				$mail_object->set_error( __( 'Postal settings are empty please check your api and domain', 'mailster-postal' ) );
 				$mail_object->sent = false;
 			} else {
+				var_dump($mail_object->mailer->Sender);
+				die;
 				$client  = new \Postal\Client( $domain, $api );
 				$message = new \Postal\SendMessage( $client );
 
@@ -168,9 +170,17 @@ class MPS_Mailster_Hooks {
 				$message->subject( $mail_object->subject );
 				$message->htmlBody( $mail_object->content );
 				$message->plainBody( $mail_object->plaintext );
+				$message->replyTo( $mail_object->reply_to );
+				$message->sender( $mail_object->mailer->Sender );
+
+
 
 				foreach ( $mail_object->to as $address ) {
 					$message->to( $address );
+				}
+
+				foreach ( $mail_object->headers as $header => $value) {
+					$message->header( $header , $value );
 				}
 
 				if ( is_array( $mail_object->cc ) && ! empty( $mail_object->cc ) ) {
