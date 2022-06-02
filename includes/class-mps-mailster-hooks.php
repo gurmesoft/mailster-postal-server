@@ -165,21 +165,26 @@ class MPS_Mailster_Hooks {
 				$client  = new \Postal\Client( $domain, $api );
 				$message = new \Postal\SendMessage( $client );
 
-				$message->from( $mail_object->from );
-				$message->subject( $mail_object->subject );
-				$message->htmlBody( $mail_object->content );
-				$message->plainBody( $mail_object->plaintext );
-				$message->replyTo( $mail_object->reply_to );
-				$message->sender( $mail_object->mailer->Sender );
-
-
-
 				foreach ( $mail_object->to as $address ) {
 					$message->to( $address );
 				}
 
-				foreach ( $mail_object->headers as $header => $value) {
-					$message->header( $header , $value );
+				$message->from( $mail_object->from );
+				$message->subject( $mail_object->subject );
+				$message->htmlBody( $mail_object->content );
+				$message->plainBody( $mail_object->plaintext );
+				$message->sender( $mail_object->mailer->Sender );
+
+				if ( is_array( $mail_object->reply_to ) && ! empty( $mail_object->reply_to ) ) {
+					$message->replyTo( implode( ',', $mail_object->reply_to ) );
+				} elseif ( is_string( $mail_object->reply_to ) ) {
+					$message->replyTo( (string) $mail_object->reply_to );
+				}
+
+				if ( is_array( $mail_object->headers ) && ! empty( $mail_object->headers ) ) {
+					foreach ( $mail_object->headers as $header => $value ) {
+						$message->header( $header, $value );
+					}
 				}
 
 				if ( is_array( $mail_object->cc ) && ! empty( $mail_object->cc ) ) {
